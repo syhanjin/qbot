@@ -8,7 +8,7 @@ import json
 ##定义socket类型，网络通信，TCP
 ListenSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #套接字绑定的IP与端口
-ListenSocket.bind(('10.0.0.10', 5701))
+ListenSocket.bind(('127.0.0.1', 5701))
 #开始TCP监听
 ListenSocket.listen(100)
 
