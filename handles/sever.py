@@ -3,8 +3,6 @@
 
 import socket
 import json
-
-from special_function.logging_tool import logging_put
  
 
 ##定义socket类型，网络通信，TCP
