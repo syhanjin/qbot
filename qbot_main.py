@@ -53,7 +53,7 @@ def main():
         all_messages = sever.rev_msg()
         try:
             msg_handle(all_messages)
-        except:
+        except BaseException as e:
             logging_put(e)
             print(e)
             continue
