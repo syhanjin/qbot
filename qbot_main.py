@@ -1,6 +1,13 @@
 # coding=utf-8
-from handles import sever, msg_handle
+from handles import sever
+from handles.client import send_msg
+from handles.msg_handle import *
+import command
 import logging
+import pymongo
+
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client['qbot']
 
 
 def logging_put(info):
@@ -13,9 +20,31 @@ def logging_put(info):
 
 
 # ----- ----- ----- -----
+def private_msg_handle(msg):
+    content = get_raw_message(msg)
+    # 指令检测
+    cmd_data = db.cmd.find_one({'key': content})
+    if cmd_data != None:
+        getattr(command, cmd_data['value']).main(msg)
+    # 从数据库中查找答案
+    else:
+
+        pass
+
+    return
+
+
+def group_msg_handle(msg):
+
+    return
+
 
 def message_handle(msg):
-
+    logging_put("收到消息"+get_raw_message(msg)+"来自"+str(get_number(msg)))
+    if get_message_type(msg) == 'private':
+        private_msg_handle(msg)
+    elif get_message_type(msg) == 'group':
+        group_msg_handle(msg)
     return
 
 
@@ -36,23 +65,19 @@ def default():
 # ----- ----- ----- -----
 
 
-def msg_handle(msg):
-    post_type = msg_handle.get_post_type(msg)  # 获取上报类型
-    if post_type == 'message':  # 消息事件
-        message_handle(msg)
-    elif post_type == 'notice':  # 通知事件
-        notice_handle(msg)
-    elif post_type == 'request':  # 请求事件
-        request_handle(msg)
-    else:
-        default(msg)
-
-
 def main():
     while True:
-        all_messages = sever.rev_msg()
+        msg = sever.rev_msg()
         try:
-            msg_handle(all_messages)
+            post_type = get_post_type(msg)  # 获取上报类型
+            if post_type == 'message':  # 消息事件
+                message_handle(msg)
+            elif post_type == 'notice':  # 通知事件
+                notice_handle(msg)
+            elif post_type == 'request':  # 请求事件
+                request_handle(msg)
+            else:
+                default(msg)
         except BaseException as e:
             logging_put(e)
             print(e)

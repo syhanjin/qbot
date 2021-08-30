@@ -33,7 +33,6 @@ def rev_msg():
 
     #接收数据解码（接收到的是string形式的json）
     data = conn.recv(10240).decode(encoding='utf-8')
-    print(data)
 
     #json格式转dict格式
     rev_dict=json_to_info(data)
