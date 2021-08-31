@@ -7,6 +7,5 @@ db = client['qbot']
 db.drop_collection('cmd')
 db.create_collection('cmd')
 db.cmd.insert_many([
-    {'key': '签到', 'value': 'sign'},
-    {'key': '刷新数据', 'value': 'redata'},
+    {'key': '签到', 'value': 'sign', 'type': 'function', 'group': True},
 ])

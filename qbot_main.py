@@ -23,9 +23,11 @@ def logging_put(info):
 def private_msg_handle(msg):
     content = get_raw_message(msg)
     # 指令检测
-    cmd_data = db.cmd.find_one({'key': content})
+    cmd_data = db.cmd.find_one({'key': content.split(' ',1), 'private': True})
     if cmd_data != None:
-        getattr(command, cmd_data['value']).main(msg)
+        if cmd_data['type'] == 'function': 
+            getattr(command, cmd_data['value']).main(msg, content.split(' ',1)[1])
+        
     # 从数据库中查找答案
     else:
 
@@ -35,6 +37,15 @@ def private_msg_handle(msg):
 
 
 def group_msg_handle(msg):
+    content = get_raw_message(msg)
+    # 指令检测
+    cmd_data = db.cmd.find_one({'key': content, 'group': True})
+    if cmd_data != None:
+        getattr(command, cmd_data['value']).main(msg)
+    # 从数据库中查找答案
+    else:
+
+        pass
 
     return
 
