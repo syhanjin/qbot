@@ -163,7 +163,7 @@ def generate_card(msg, data):
     y += 15
     y += putText(
         draw, x, y,
-        ('时间: ', now.__format__('%Y-%m-%d %a %M:%H')),
+        ('时间: ', now.__format__('%Y-%m-%d %a %H:%M')),
         font=fontpath, fontsize=48
     )[1]
     # endregion
@@ -198,7 +198,7 @@ def generate_card(msg, data):
     # region 合成并保存
     img = Image.alpha_composite(img.convert('RGBA'), tmp)
     img = img.convert("RGB")
-    out_path = os.path.join(root_path, 'cards', 'test.jpg')
+    out_path = os.path.join(root_path, 'cards', now.__format__('%Y-%m-%d %H:%M:%S')+str(random.randint(10,99))+'.jpg')
     img.save(out_path)
     # endregion
     return data, os.path.abspath(out_path)
