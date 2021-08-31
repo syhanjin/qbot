@@ -79,6 +79,7 @@ def default():
 def main():
     while True:
         msg = sever.rev_msg()
+        print(msg)
         if msg:
             try:
                 post_type = get_post_type(msg)  # 获取上报类型

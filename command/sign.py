@@ -1,7 +1,5 @@
 # coding=utf-8
 from handles.client import send_msg
-from ntpath import join
-from typing import Tuple
 # from handles.client import send_msg
 import pymongo
 import os
