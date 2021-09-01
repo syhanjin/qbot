@@ -90,7 +90,7 @@ def generate_card(msg, data):
 
     # region 输出用户名 && QQ && sakuyark
     y = 10
-    y += putText(draw, 40, y, msg['sender']['card'] if(msg['sender']['card']) else msg['nickname'], font=fontpath,
+    y += putText(draw, 40, y, msg['sender']['card'] if(msg['sender']['card']) else msg['sender']['nickname'], font=fontpath,
                  fill=(255, 255, 255), fontsize=128, border=1.5)[1]
     y += putText(draw, 40, y, ('QQ:', msg['user_id']), font=fontpath,
                  fill=(255, 255, 255), fontsize=96, border=1.5)[1]
