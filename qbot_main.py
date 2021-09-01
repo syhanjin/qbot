@@ -41,8 +41,10 @@ def private_msg_handle(msg):
 def group_msg_handle(msg):
     content = get_raw_message(msg)
     # 指令检测
+    print('$where :', '"'+content+'".match(this.key)')
     cmd_data = db.cmd.find_one({'$where': '"'+content+'".match(this.key)', 'group': True})
     if cmd_data != None:
+        logging_put('收到指令['+msg['group_id']+']:'+content)
         getattr(command, cmd_data['value']).main(msg)
     # 从数据库中查找答案
     else:
