@@ -2,7 +2,7 @@
 # 在5700端口的角度上，我们是发送消息的客户端
 import requests
 import json
-from handles.logs import logging_put
+from handles.operations import logging_put
 
 
 ip = '127.0.0.1'
