@@ -222,6 +222,6 @@ def main(msg, args=None):
     send_msg({
         'msg_type': 'group',
         'number': msg['group_id'],
-        'message': '[CQ=image, file='+img+']'
+        'msg': '[CQ=image, file='+img+']'
     })
     return
