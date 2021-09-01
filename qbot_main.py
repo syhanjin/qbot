@@ -85,19 +85,15 @@ app = Flask(__name__)
 def main():
     if request.json:
         msg = request.json
-        try:
-            post_type = get_post_type(msg)  # 获取上报类型
-            if post_type == 'message':  # 消息事件
-                message_handle(msg)
-            elif post_type == 'notice':  # 通知事件
-                notice_handle(msg)
-            elif post_type == 'request':  # 请求事件
-                request_handle(msg)
-            else:
-                default()
-        except BaseException as e:
-            logging_put(e)
-            print(e)
+        post_type = get_post_type(msg)  # 获取上报类型
+        if post_type == 'message':  # 消息事件
+            message_handle(msg)
+        elif post_type == 'notice':  # 通知事件
+            notice_handle(msg)
+        elif post_type == 'request':  # 请求事件
+            request_handle(msg)
+        else:
+            default()
     return 'OK'
 
 
