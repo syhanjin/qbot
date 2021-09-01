@@ -83,7 +83,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
-    logging_put('request='+str(request.form))
+    for i in request:
+        print(i)
     return 'OK'
     while True:
         msg = sever.rev_msg()
