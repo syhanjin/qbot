@@ -37,7 +37,7 @@ def group_msg_handle(msg):
     # 指令检测
     cmd_data = db.cmd.find_one({'$where': '"'+content+'".match(this.key)', 'group': True})
     if cmd_data != None:
-        logging_put('收到指令['+msg['group_id']+']:'+content)
+        logging_put('收到指令['+str(msg['group_id'])+']:'+content)
         getattr(command, cmd_data['value']).main(msg, content)
     # 从数据库中查找答案
     else:
