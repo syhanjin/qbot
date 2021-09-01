@@ -219,7 +219,7 @@ def main(msg, args=None):
             {'qq': msg['user_id'], 'group': msg['group_id']}, data)
     send_msg({
         'msg_type': 'group',
-        'group_id': msg['group_id'],
+        'number': msg['group_id'],
         'message': '[CQ=image, file='+img+']'
     })
     return
