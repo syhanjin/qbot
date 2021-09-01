@@ -238,6 +238,7 @@ def main(msg, args=None):
                 'number': msg['group_id'],
                 'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
             })
+            return 
     # '''
     data, img = generate_card(msg, data)
     if flag:
