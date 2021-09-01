@@ -18,7 +18,7 @@ card_ratio = 16 / 9
 def rand(st, ed): return random.random()*(ed-st) + st
 
 
-def putText(draw, x, y, text: 'str | Tuple', font='微软雅黑', fontsize=16, fill=(0, 0, 0), border=0, borderFill=(0, 0, 0)):
+def putText(draw, x, y, text: 'str | tuple', font='微软雅黑', fontsize=16, fill=(0, 0, 0), border=0, borderFill=(0, 0, 0)):
     font = ImageFont.truetype(font, size=fontsize)
     if type(text) == type(()):
         tmp = text
@@ -202,7 +202,7 @@ def generate_card(msg, data):
     return data, os.path.abspath(out_path)
 
 
-def main(msg, args):
+def main(msg, args=None):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
     flag = False
     if data == None:
