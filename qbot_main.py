@@ -83,29 +83,22 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
-    print('form', request.form)
-    print('json', request.json)
-    print('arg', request.args)
-    print('data', request.data)
+    if request.json:
+        msg = request.json
+        try:
+            post_type = get_post_type(msg)  # 获取上报类型
+            if post_type == 'message':  # 消息事件
+                message_handle(msg)
+            elif post_type == 'notice':  # 通知事件
+                notice_handle(msg)
+            elif post_type == 'request':  # 请求事件
+                request_handle(msg)
+            else:
+                default(msg)
+        except BaseException as e:
+            logging_put(e)
+            print(e)
     return 'OK'
-    while True:
-        msg = sever.rev_msg()
-        logging_put(msg)
-        if msg:
-            try:
-                post_type = get_post_type(msg)  # 获取上报类型
-                if post_type == 'message':  # 消息事件
-                    message_handle(msg)
-                elif post_type == 'notice':  # 通知事件
-                    notice_handle(msg)
-                elif post_type == 'request':  # 请求事件
-                    request_handle(msg)
-                else:
-                    default(msg)
-            except BaseException as e:
-                logging_put(e)
-                print(e)
-                continue
 
 
 app.debug = True
