@@ -79,7 +79,7 @@ def default():
 app = Flask()
 @app.route('/')
 def main():
-    logging_put(request.form)
+    logging_put(request)
     return 200
     while True:
         msg = sever.rev_msg()
