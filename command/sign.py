@@ -196,7 +196,8 @@ def generate_card(msg, data):
     # region 合成并保存
     img = Image.alpha_composite(img.convert('RGBA'), tmp)
     img = img.convert("RGB")
-    out_path = os.path.join(root_path, 'cards', now.__format__('%Y-%m-%d %H:%M:%S')+str(random.randint(10,99))+'.jpg')
+    out_path = os.path.join(root_path, 'cards', now.__format__(
+        '%Y-%m-%d %H:%M:%S')+str(random.randint(10, 99))+'.jpg')
     img.save(out_path)
     # endregion
     return data, os.path.abspath(out_path)
@@ -217,7 +218,7 @@ def main(msg, args=None):
         db.sign.insert_one(data)
     else:
         db.sign.update_one(
-            {'qq': msg['user_id'], 'group': msg['group_id']}, data)
+            {'qq': msg['user_id'], 'group': msg['group_id']}, {'$set': data})
     send_msg({
         'msg_type': 'group',
         'number': msg['group_id'],
