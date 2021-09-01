@@ -20,7 +20,7 @@ def group_ban(msg, cmd, cmd_data):
         duration = 60
     operations.group_ban(msg['group_id'], qq, duration)
 
-def cancel_group_ban(msg, cmd):
+def cancel_group_ban(msg, cmd, cmd_data):
     if not operations.is_admin(msg['user_id']):
         send_msg({
             'msg': '你不是管理员，无权进行操作',
