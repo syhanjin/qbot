@@ -15,7 +15,7 @@ def logging_put(info):
 
 def group_ban(group_id, user_id, duration=0):
     if user_id == 'all':
-        if duration != 0:
+        if duration > 0:
             payload = '/set_group_whole_ban?group_id='+str(group_id)+'&enable=true'
             logging_put('群['+str(group_id)+']禁言')
         else:

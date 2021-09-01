@@ -30,4 +30,4 @@ def cancel_group_ban(msg, cmd):
         return
     m = re.match(cmd_data['key'], cmd)
     qq = m.group(1)
-    operations.group_ban(msg['group_id'], qq, 0)
+    operations.group_ban(msg['group_id'], qq)
