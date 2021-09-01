@@ -1,6 +1,5 @@
+from handles.client import send_msg
 import command.sign
 
 # 微型指令
-def group_ban(msg,args):
-    
-    return
+from handles.operations import group_ban

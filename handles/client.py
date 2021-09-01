@@ -2,6 +2,7 @@
 # 在5700端口的角度上，我们是发送消息的客户端
 import requests
 import json
+from handles.logs import logging_put
 
 
 ip = '127.0.0.1'
@@ -26,8 +27,8 @@ def send_msg(resp_dict):
     elif msg_type == 'private':
         payload = "/send_private_msg?user_id=" + \
             str(number) + "&message=" + msg 
-    print("发送"+payload)
+    logging_put("发送"+payload)
     r = requests.get('http://' + ip + ':5700' + payload)
     if r.status_code != 200:
-        print('发送失败')
+        logging_put('发送失败')
     return 0

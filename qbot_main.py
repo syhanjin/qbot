@@ -3,6 +3,7 @@ from flask import Flask, request
 # from handles import sever
 from handles.client import send_msg
 from handles.msg_handle import *
+from handles.operations import *
 import command
 import logging
 import pymongo
@@ -11,13 +12,6 @@ client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
 
-def logging_put(info):
-    logging.basicConfig(
-        filename='robot.log',
-        level=logging.INFO,
-        format='%(asctime)s:%(levelname)s:%(message)s'
-    )
-    logging.info(info)
 
 
 # ----- ----- ----- -----
@@ -44,7 +38,7 @@ def group_msg_handle(msg):
     cmd_data = db.cmd.find_one({'$where': '"'+content+'".match(this.key)', 'group': True})
     if cmd_data != None:
         logging_put('收到指令['+msg['group_id']+']:'+content)
-        getattr(command, cmd_data['value']).main(msg)
+        getattr(command, cmd_data['value']).main(msg, content)
     # 从数据库中查找答案
     else:
 

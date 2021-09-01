@@ -203,9 +203,7 @@ def generate_card(msg, data):
     return data, os.path.abspath(out_path)
 
 
-def main(msg, args=None):
-    if args and len(args.strip()) > 0:
-        return
+def main(msg, cmd):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
     flag = False
     if data == None:
