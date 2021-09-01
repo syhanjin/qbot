@@ -7,5 +7,6 @@ db = client['qbot']
 db.drop_collection('cmd')
 db.create_collection('cmd')
 db.cmd.insert_many([
-    {'key': '签到', 'value': 'sign', 'type': 'function', 'group': True},
+    {'key': '^签到$', 'value': 'sign', 'type': 'function', 'group': True},
+    {'key': '^禁言 *\[CQ:at,qq=(\d+)[^\]]*\]$', 'value': 'sign', 'type': 'function', 'group': True},
 ])
