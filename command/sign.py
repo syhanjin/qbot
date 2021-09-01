@@ -205,6 +205,7 @@ def generate_card(msg, data):
 
 def main(msg, args=None):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
+    '''
     now = datetime.datetime.now()
     if (
         now
@@ -226,8 +227,9 @@ def main(msg, args=None):
         send_msg({
             'msg_type': 'group',
             'number': msg['group_id'],
-            'msg': '[CQ=at, qq='+msg['user_id']+'] 你今天已经签过到了，明天再来吧~~~'
+            'msg': '[CQ=at, qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
         })
+    '''
     flag = False
     if data == None:
         data = create_data(msg)
