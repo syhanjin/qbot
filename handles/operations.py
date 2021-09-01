@@ -1,6 +1,10 @@
 # coding=utf-8
 import requests
 import logging
+import pymongo
+
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client['qbot']
 def logging_put(info):
     logging.basicConfig(
         filename='robot.log',
@@ -17,3 +21,6 @@ def group_ban(group_id, user_id, duration):
         logging_put('禁言失败')
         return False
     return True
+
+def is_admin(qq):
+    return bool(db.admin.find_one({'user_id':str(qq)}))

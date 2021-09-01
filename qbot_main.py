@@ -38,7 +38,10 @@ def group_msg_handle(msg):
     cmd_data = db.cmd.find_one({'$where': '"'+content+'".match(this.key)', 'group': True})
     if cmd_data != None:
         logging_put('收到指令['+str(msg['group_id'])+']:'+content)
-        getattr(command, cmd_data['value']).main(msg, content)
+        if cmd_data.get('inline'):
+            getattr(command, cmd_data['value'])(msg, content)
+        else:
+            getattr(command, cmd_data['value']).main(msg, content)
     # 从数据库中查找答案
     else:
 
