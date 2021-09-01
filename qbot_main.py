@@ -1,4 +1,5 @@
 # coding=utf-8
+from flask import Flask, request
 from handles import sever
 from handles.client import send_msg
 from handles.msg_handle import *
@@ -75,8 +76,11 @@ def default():
 
 # ----- ----- ----- -----
 
-
+app = Flask()
+@app.route('/')
 def main():
+    logging_put(request.form)
+    return 200
     while True:
         msg = sever.rev_msg()
         logging_put(msg)
@@ -98,4 +102,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
