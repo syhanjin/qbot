@@ -24,11 +24,12 @@ def logging_put(info):
 def private_msg_handle(msg):
     content = get_raw_message(msg)
     # 指令检测
-    cmd_data = db.cmd.find_one({'key': content.split(' ',1), 'private': True})
+    cmd_data = db.cmd.find_one({'key': content.split(' ', 1), 'private': True})
     if cmd_data != None:
-        if cmd_data['type'] == 'function': 
-            getattr(command, cmd_data['value']).main(msg, content.split(' ',1)[1])
-        
+        if cmd_data['type'] == 'function':
+            getattr(command, cmd_data['value']).main(
+                msg, content.split(' ', 1)[1])
+
     # 从数据库中查找答案
     else:
 
@@ -76,10 +77,13 @@ def default():
 
 # ----- ----- ----- -----
 
+
 app = Flask()
+
+
 @app.route('/')
 def main():
-    logging_put('request=',request)
+    logging_put('request='+request)
     return 200
     while True:
         msg = sever.rev_msg()
@@ -100,7 +104,8 @@ def main():
                 print(e)
                 continue
 
+
 app.debug = True
 if __name__ == '__main__':
-    app.run('127.0.0.1',5701)
+    app.run('127.0.0.1', 5701)
     # main()
