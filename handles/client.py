@@ -29,7 +29,7 @@ def send_msg(resp_dict):
             str(number) + "&message=" + msg + " HTTP/1.1\r\nHost:" + \
             ip+":5700\r\nConnection: close\r\n\r\n"
     print("发送"+payload)
-    r = requests.get('http://' + ip + ':5700' + payload.encode("utf-8"))
+    r = requests.get('http://' + ip + ':5700' + payload)
     if r.status_code != 200:
         print('发送失败')
     return 0
