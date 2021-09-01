@@ -100,6 +100,7 @@ def main():
                 print(e)
                 continue
 
-
+app.debug = True
 if __name__ == '__main__':
+    app.run('127.0.0.1',5701)
     # main()
