@@ -53,7 +53,7 @@ def group_msg_handle(msg):
 
 
 def message_handle(msg):
-    logging_put("收到消息"+get_raw_message(msg)+"来自"+str(get_number(msg)))
+    logging_put("收到消息'"+get_raw_message(msg)+"'来自"+str(get_number(msg)))
     if get_message_type(msg) == 'private':
         private_msg_handle(msg)
     elif get_message_type(msg) == 'group':
@@ -94,7 +94,7 @@ def main():
             elif post_type == 'request':  # 请求事件
                 request_handle(msg)
             else:
-                default(msg)
+                default()
         except BaseException as e:
             logging_put(e)
             print(e)
