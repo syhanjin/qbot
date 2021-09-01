@@ -39,9 +39,9 @@ def group_msg_handle(msg):
     if cmd_data != None:
         logging_put('收到指令['+str(msg['group_id'])+']:'+content)
         if cmd_data.get('inline'):
-            getattr(command, cmd_data['value'])(msg, content)
+            getattr(command, cmd_data['value'])(msg, content, cmd_data)
         else:
-            getattr(command, cmd_data['value']).main(msg, content)
+            getattr(command, cmd_data['value']).main(msg, content, cmd_data)
     # 从数据库中查找答案
     else:
 
@@ -60,7 +60,14 @@ def message_handle(msg):
 
 
 def notice_handle(msg):
-
+    logging_put("收到通知 来自"+str(get_number(msg)))
+    if get_notice_type(msg) == 'group_increase':
+        # 群成员增加
+        send_msg({
+            'msg': '欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告',
+            'number': msg['group_id'],
+            'msg_type': 'group'
+        })
     return
 
 

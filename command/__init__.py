@@ -5,7 +5,7 @@ import command.sign
 from handles import operations
 import re
 
-def group_ban(msg, cmd):
+def group_ban(msg, cmd, cmd_data):
     if not operations.is_admin(msg['user_id']):
         send_msg({
             'msg': '你不是管理员，无权进行操作',
@@ -13,7 +13,7 @@ def group_ban(msg, cmd):
             'msg_type': 'group'
         })
         return
-    m = re.match('^禁言 *\[CQ:at,qq=(\d+)[^\]]*\] *(\d+)?$', cmd)
+    m = re.match(cmd_data['key'], cmd)
     qq = m.group(1)
     duration = m.group(2)
     if not duration:
@@ -28,6 +28,6 @@ def cancel_group_ban(msg, cmd):
             'msg_type': 'group'
         })
         return
-    m = re.match('^解禁 *\[CQ:at,qq=(\d+)[^\]]*\]$', cmd)
+    m = re.match(cmd_data['key'], cmd)
     qq = m.group(1)
     operations.group_ban(msg['group_id'], qq, 0)
