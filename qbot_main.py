@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import Flask, request
-from handles import sever
+# from handles import sever
 from handles.client import send_msg
 from handles.msg_handle import *
 import command
