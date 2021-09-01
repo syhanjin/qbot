@@ -205,6 +205,14 @@ def generate_card(msg, data):
 
 def main(msg, args=None):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
+    flag = False
+    if data == None:
+        data = create_data(msg)
+        flag = True
+    else:
+        sydata = userdb.userdata.find_one({'qq': msg['user_id']})
+        if sydata:
+            data['user'] = sydata.get('user')
     # '''
     if data.get('last'):
         now = datetime.datetime.now()
@@ -231,14 +239,6 @@ def main(msg, args=None):
                 'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
             })
     # '''
-    flag = False
-    if data == None:
-        data = create_data(msg)
-        flag = True
-    else:
-        sydata = userdb.userdata.find_one({'qq': msg['user_id']})
-        if sydata:
-            data['user'] = sydata.get('user')
     data, img = generate_card(msg, data)
     if flag:
         db.sign.insert_one(data)
