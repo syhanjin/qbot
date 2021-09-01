@@ -204,7 +204,7 @@ def generate_card(msg, data):
 
 
 def main(msg, args=None):
-    if not args or len(args.strip()) > 0:
+    if args and len(args.strip()) > 0:
         return
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
     flag = False
