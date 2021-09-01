@@ -84,7 +84,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def main():
     logging_put('request='+str(request))
-    return 200
+    return 'OK'
     while True:
         msg = sever.rev_msg()
         logging_put(msg)
