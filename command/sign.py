@@ -209,8 +209,7 @@ def main(msg, args=None):
         data = create_data(msg)
         flag = True
     else:
-        data['user'] = userdb.userdata.find_one(
-            {'qq': msg['user_id']}).get('user')
+        data['user'] = userdb.userdata.find_one({'qq': msg['user_id']}).get('user')
     data, img = generate_card(msg, data)
     if flag:
         db.sign.insert_one(data)
