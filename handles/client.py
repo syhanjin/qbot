@@ -22,12 +22,10 @@ def send_msg(resp_dict):
 
     if msg_type == 'group':
         payload = "/send_group_msg?group_id=" + \
-            str(number) + "&message=" + msg + " HTTP/1.1\r\nHost:" + \
-            ip+":5700\r\nConnection: close\r\n\r\n"
+            str(number) + "&message=" + msg 
     elif msg_type == 'private':
         payload = "/send_private_msg?user_id=" + \
-            str(number) + "&message=" + msg + " HTTP/1.1\r\nHost:" + \
-            ip+":5700\r\nConnection: close\r\n\r\n"
+            str(number) + "&message=" + msg 
     print("发送"+payload)
     r = requests.get('http://' + ip + ':5700' + payload)
     if r.status_code != 200:

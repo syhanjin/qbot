@@ -197,7 +197,7 @@ def generate_card(msg, data):
     img = Image.alpha_composite(img.convert('RGBA'), tmp)
     img = img.convert("RGB")
     out_path = os.path.join(root_path, 'cards', now.__format__(
-        '%Y-%m-%d %H:%M:%S')+str(random.randint(10, 99))+'.jpg')
+        '%Y%m%d%H%M%S')+str(random.randint(10, 99))+'.jpg')
     img.save(out_path)
     # endregion
     return data, os.path.abspath(out_path)
@@ -205,6 +205,29 @@ def generate_card(msg, data):
 
 def main(msg, args=None):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
+    now = datetime.datetime.now()
+    if (
+        now
+        - datetime.timedelta(
+            hours=now.hour,
+            minutes=now.minute,
+            seconds=now.second,
+            microseconds=now.microsecond
+        )
+    ) == (
+            data['last']
+            - datetime.timedelta(
+                hours=data['last'].hour,
+                minutes=data['last'].minute,
+                seconds=data['last'].second,
+                microseconds=data['last'].microsecond
+            )
+    ):
+        send_msg({
+            'msg_type': 'group',
+            'number': msg['group_id'],
+            'msg': '[CQ=at, qq='+msg['user_id']+'] 你今天已经签过到了，明天再来吧~~~'
+        })
     flag = False
     if data == None:
         data = create_data(msg)
