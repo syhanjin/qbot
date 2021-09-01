@@ -10,3 +10,6 @@ db.favlvl.insert_many([
     {'lvl': -1, 'max': 0, 'label': '陌生人', 'attitude': '排斥', 'fav': (0.2, 0.5)},
     {'lvl': 0, 'max': 10, 'label': '陌生人', 'attitude': '正常', 'fav': (0.5, 1)}
 ])
+
+db.drop_collection('sign')
+db.create_collection('sign')
