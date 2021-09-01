@@ -83,8 +83,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
-    for i in request:
-        print(i)
+    print('form',request.form)
+    print('json',request.json)
     return 'OK'
     while True:
         msg = sever.rev_msg()
