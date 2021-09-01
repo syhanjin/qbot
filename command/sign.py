@@ -203,7 +203,7 @@ def generate_card(msg, data):
     return data, os.path.abspath(out_path)
 
 
-def main(msg, cmd):
+def main(msg, cmd, cmd_data):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
     flag = False
     if data == None:
