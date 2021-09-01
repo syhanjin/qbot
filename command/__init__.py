@@ -3,7 +3,7 @@ import command.sign
 
 # 微型指令
 from handles import operations
-
+import re
 
 def group_ban(msg, cmd):
     if not operations.is_admin(msg['user_id']):
@@ -13,7 +13,7 @@ def group_ban(msg, cmd):
             'msg_type': 'group'
         })
         return
-    m = cmd.match('^禁言 *\[CQ:at,qq=(\d+)[^\]]*\]$ *(\d+)?')
+    m = re.match('^禁言 *\[CQ:at,qq=(\d+)[^\]]*\]$ *(\d+)?', cmd)
     qq = m.group(1)
     duration = m.group(2)
     if not duration:
