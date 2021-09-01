@@ -206,29 +206,30 @@ def generate_card(msg, data):
 def main(msg, args=None):
     data = db.sign.find_one({'qq': msg['user_id'], 'group': msg['group_id']})
     # '''
-    now = datetime.datetime.now()
-    if (
-        now
-        - datetime.timedelta(
-            hours=now.hour,
-            minutes=now.minute,
-            seconds=now.second,
-            microseconds=now.microsecond
-        )
-    ) == (
-            data['last']
+    if data.get('last'):
+        now = datetime.datetime.now()
+        if (
+            now
             - datetime.timedelta(
-                hours=data['last'].hour,
-                minutes=data['last'].minute,
-                seconds=data['last'].second,
-                microseconds=data['last'].microsecond
+                hours=now.hour,
+                minutes=now.minute,
+                seconds=now.second,
+                microseconds=now.microsecond
             )
-    ):
-        send_msg({
-            'msg_type': 'group',
-            'number': msg['group_id'],
-            'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
-        })
+        ) == (
+                data['last']
+                - datetime.timedelta(
+                    hours=data['last'].hour,
+                    minutes=data['last'].minute,
+                    seconds=data['last'].second,
+                    microseconds=data['last'].microsecond
+                )
+        ):
+            send_msg({
+                'msg_type': 'group',
+                'number': msg['group_id'],
+                'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
+            })
     # '''
     flag = False
     if data == None:
