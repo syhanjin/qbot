@@ -227,7 +227,7 @@ def main(msg, args=None):
         send_msg({
             'msg_type': 'group',
             'number': msg['group_id'],
-            'msg': '[CQ=at, qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
+            'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
         })
     '''
     flag = False
@@ -247,6 +247,6 @@ def main(msg, args=None):
     send_msg({
         'msg_type': 'group',
         'number': msg['group_id'],
-        'msg': '[CQ=image, file='+img+']'
+        'msg': '[CQ:image,file='+img+']'
     })
     return
