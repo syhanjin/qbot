@@ -60,11 +60,12 @@ def test_cards(msg, cmd=None, cmd_data=None):
         if not re.match(reg['reg'], card, re.I):
             user = db.user.find_one(
                 {'user_id': i['user_id'], 'group_id': group_id})
-            operations.logging_put('user_id=<'+str(type(i['user_id']))+'>'+str(
-                i['user_id'])+'\n' + 'group_id=<' + str(type(group_id))+'>'+str(group_id)+'\n' + 'data='+str(user))
-            if not user:
+            # operations.logging_put('user_id=<'+str(type(i['user_id']))+'>'+str(
+            #     i['user_id'])+'\n' + 'group_id=<' + str(type(group_id))+'>'+str(group_id)+'\n' + 'data='+str(user))
+            if user == None:
                 user = operations.create_user_data(group_id, i['user_id'])
                 user['card_warn'] = 1
+                operations.logging_put(str(user))
                 db.user.insert_one(user)
             else:
                 db.user.update_one({'_id': user['_id']}, {
