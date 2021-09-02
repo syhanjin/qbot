@@ -10,6 +10,7 @@ import datetime
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
+
 def group_ban(msg, cmd, cmd_data):
     if not operations.get_admin(msg):
         send_msg({
@@ -25,6 +26,7 @@ def group_ban(msg, cmd, cmd_data):
         duration = 60
     operations.group_ban(msg['group_id'], qq, duration)
 
+
 def cancel_group_ban(msg, cmd, cmd_data):
     if not operations.get_admin(msg):
         send_msg({
@@ -38,7 +40,6 @@ def cancel_group_ban(msg, cmd, cmd_data):
     operations.group_ban(msg['group_id'], qq)
 
 
-    
 def test_cards(msg, cmd=None, cmd_data=None):
     if not operations.get_admin(msg):
         send_msg({
@@ -57,18 +58,17 @@ def test_cards(msg, cmd=None, cmd_data=None):
     for i in datas:
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
-            user = db.user.find_one({'user_id':i['user_id'],'group_id':group_id})
-            operations.logging_put(
-                'user_id=<'+type(i['user_id'])+'>'+str(i['user_id'])+'\n'
-                +'group_id=<'+type(group_id)+'>'+str(group_id)+'\n'
-                +'data='+str(user)
-            )
+            user = db.user.find_one(
+                {'user_id': i['user_id'], 'group_id': group_id})
+            operations.logging_put('user_id=<'+type(i['user_id'])+'>'+str(
+                i['user_id'])+'\n' + 'group_id=<' + type(group_id)+'>'+str(group_id)+'\n' + 'data='+str(user))
             if not user:
                 user = operations.create_user_data(group_id, i['user_id'])
                 user['card_warn'] = 1
                 db.user.insert_one(user)
             else:
-                db.user.update_one({'_id':user['_id']},{'$inc':{'card_warn':1}})
+                db.user.update_one({'_id': user['_id']}, {
+                                   '$inc': {'card_warn': 1}})
             if user['card_warn'] >= reg['warn']:
                 operations.group_kick(group_id, i['user_id'])
                 flag = True
@@ -78,7 +78,8 @@ def test_cards(msg, cmd=None, cmd_data=None):
     for i in wids:
         msg += '[CQ:at,qq='+i+']'
     msg += '请修改群名片，名片格式参见公告，三次警告后踢出\n'
-    if flag: msg+='警告满'+str(reg['warn'])+'次的已t出'
+    if flag:
+        msg += '警告满'+str(reg['warn'])+'次的已t出'
     if flag or len(wids) > 0:
         send_msg({
             'number': group_id,
