@@ -4,6 +4,7 @@ import command.sign
 # 微型指令
 from handles import operations
 import re
+import json
 import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
@@ -50,10 +51,10 @@ def test_cards(msg, cmd=None, cmd_data=None):
     if not reg:
         return False
     datas = operations.get_group_member_list(group_id)
-    operations.logging_put(str(datas))
     wids = []
     flag = False
     for i in datas:
+        i = json.loads(i)
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
             user = db.user.find_one_and_update({'user_id':i['user_id']},{'$inc':{'card_warn':1}})
