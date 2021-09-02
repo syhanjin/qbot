@@ -50,13 +50,11 @@ def test_cards(msg, cmd=None, cmd_data=None):
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
         return False
-    datas = operations.get_group_member_list(group_id)
+    datas = operations.get_group_member_list(group_id)['data']
     wids = []
     flag = False
     operations.logging_put(datas)
     for i in datas:
-        operations.logging_put(i)
-        i = json.loads(i)
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
             user = db.user.find_one_and_update({'user_id':i['user_id']},{'$inc':{'card_warn':1}})
