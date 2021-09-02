@@ -50,7 +50,6 @@ def test_cards(msg, cmd=None, cmd_data=None):
     if not reg:
         return False
     datas = operations.get_group_member_list(group_id)
-    print(datas)
     wids = []
     flag = False
     for i in datas:
