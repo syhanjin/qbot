@@ -72,7 +72,7 @@ def group_ban(group_id, user_id, duration=0):
 
 def delete_msg(msg_id):
     # 撤回消息
-    payload = '/delete_msg?message_id='+msg_id
+    payload = '/delete_msg?message_id='+str(msg_id)
     r = requests.get('http://127.0.0.1:5700' + payload)
     if r.status_code != 200:
         return False
