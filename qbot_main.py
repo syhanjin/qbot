@@ -31,7 +31,7 @@ def create_user_data(group_id, user_id):
 
 
 def update_user_data(data):
-    for k, v in template_data:
+    for k, v in enumerate(template_data):
         if k not in data:
             data[k] = v
     return data
