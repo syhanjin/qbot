@@ -37,7 +37,8 @@ def cancel_group_ban(msg, cmd, cmd_data):
 
 
     
-def test_cards(group_id):
+def test_cards(msg, cmd, cmd_data):
+    group_id = msg['group_id']
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
         return False
