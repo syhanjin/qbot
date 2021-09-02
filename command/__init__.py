@@ -58,6 +58,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
             user = db.user.find_one({'user_id':i['user_id'],'group_id':msg['group_id']})
+            operations.logging_put(str(user))
             if not user:
                 user = operations.create_user_data(msg['group_id'], i['user_id'])
                 user['card_warn'] = 1
