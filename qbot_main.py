@@ -55,7 +55,7 @@ def count_group_msg(msg):
     now = datetime.datetime.now()
     if not admin and data['last'] and (now - data['last']).seconds < 2:
         # 非管理员用户两秒内连续发送消息，将被禁言 60s
-        group_ban(group_id, user_id)
+        group_ban(group_id, user_id, 60)
     data['count'] += 1
     data['last'] = now
     db.msg.update_one({'_id': data['_id']}, {'$set': data})
