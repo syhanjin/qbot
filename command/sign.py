@@ -68,7 +68,8 @@ def generate_card(msg, data):
     fav = db.favlvl.find_one({'lvl': data['favorLevel']})
     favorability = float(format(rand(fav['fav'][0], fav['fav'][1]), '.2f'))
     coin = int(rand(5, 20))
-    data['favorability'] += favorability
+    data['favorability'] = float(
+        format(data['favorability'] + favorability, '.2f'))
     data['coin'] += coin
     if data['favorability'] > fav['max']:
         data['favorLevel'] += 1
@@ -238,7 +239,7 @@ def main(msg, cmd, cmd_data):
                 'number': msg['group_id'],
                 'msg': '[CQ:at,qq='+str(msg['user_id'])+'] 你今天已经签过到了，明天再来吧~~~'
             })
-            return 
+            return
     # '''
     data, img = generate_card(msg, data)
     if flag:
