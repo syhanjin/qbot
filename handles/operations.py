@@ -85,7 +85,7 @@ def get_group_member_list(group_id):
     r = requests.get('http://127.0.0.1:5700' + payload)
     if r.status_code != 200:
         return False
-    return r.json
+    return r.json()
 
 
 def group_kick(group_id, user_id):
