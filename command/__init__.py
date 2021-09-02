@@ -38,6 +38,13 @@ def cancel_group_ban(msg, cmd, cmd_data):
 
     
 def test_cards(msg, cmd, cmd_data):
+    if not operations.get_admin(msg):
+        send_msg({
+            'msg': '你不是管理员，无权进行操作',
+            'number': msg['group_id'],
+            'msg_type': 'group'
+        })
+        return
     group_id = msg['group_id']
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
