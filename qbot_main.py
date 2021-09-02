@@ -31,7 +31,7 @@ def create_user_data(group_id, user_id):
 
 
 def update_user_data(data):
-    for k, v in enumerate(template_data):
+    for k, v in template_data.items():
         if k not in data:
             data[k] = v
     return data
@@ -117,7 +117,6 @@ def message_handle(msg):
         db.user.insert_one(create_user_data(msg['group_id'], msg['user_id']))
     else:
         data = update_user_data(data)
-        print(data) 
         db.user.update_one({'_id': data['_id']}, {
                            '$set': data})
     if get_message_type(msg) == 'private':
