@@ -60,7 +60,7 @@ def message_handle(msg):
 
 
 def notice_handle(msg):
-    logging_put("收到通知 来自"+str(get_number(msg)))
+    logging_put("收到通知 来自"+str(get_group_id(msg)))
     if get_notice_type(msg) == 'group_increase':
         # 群成员增加
         send_msg({

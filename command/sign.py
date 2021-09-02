@@ -66,10 +66,9 @@ def generate_card(msg, data):
     last = data['last']
     data['last'] = now
     fav = db.favlvl.find_one({'lvl': data['favorLevel']})
-    favorability = float(format(rand(fav['fav'][0], fav['fav'][1]), '.2f'))
+    favorability = round(rand(fav['fav'][0], fav['fav'][1]), 2)
     coin = int(rand(5, 20))
-    data['favorability'] = float(
-        format(data['favorability'] + favorability, '.2f'))
+    data['favorability'] = round(data['favorability'] + favorability, 2)
     data['coin'] += coin
     if data['favorability'] > fav['max']:
         data['favorLevel'] += 1
@@ -250,6 +249,6 @@ def main(msg, cmd, cmd_data):
     send_msg({
         'msg_type': 'group',
         'number': msg['group_id'],
-        'msg': '[CQ:image,file=file://'+img+']'
+        'msg': '[CQ:at,qq='+str(msg['user_id'])+'][CQ:image,file=file://'+img+']'
     })
     return
