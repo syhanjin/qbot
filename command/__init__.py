@@ -49,7 +49,8 @@ def test_cards(msg, cmd=None, cmd_data=None):
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
         return False
-    datas = list(operations.get_group_member_list(group_id))
+    datas = operations.get_group_member_list(group_id)
+    print(datas)
     wids = []
     flag = False
     for i in datas:
