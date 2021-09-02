@@ -46,7 +46,7 @@ def count_group_msg(msg):
     # 统计群消息
     group_id, user_id = get_group_id(msg), get_user_id(msg)
     data = db.msg.find_one(
-        {'group': group_id, 'user_id': user_id})
+        {'group_id': group_id, 'user_id': user_id})
     admin = get_admin(msg)
     if not data:
         # 新发消息
