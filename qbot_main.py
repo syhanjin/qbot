@@ -111,12 +111,13 @@ def group_msg_handle(msg):
 
 def message_handle(msg):
     logging_put("收到消息'"+get_raw_message(msg)+"'来自"+str(get_number(msg)))
-    data = db.user.find_one({'user_id': msg['user_id']})
+    data = db.user.find_one(
+        {'user_id': msg['user_id'], 'group_id': msg['group_id']})
     if not data:
-        db.user.insert_one(create_user_data(
-            msg['group_id'], msg['user_id']))
+        db.user.insert_one(create_user_data(msg['group_id'], msg['user_id']))
     else:
-        db.user.update_one({'_id':data['_id']},{'$set':update_user_data(data)})
+        db.user.update_one({'_id': data['_id']}, {
+                           '$set': update_user_data(data)})
     if get_message_type(msg) == 'private':
         private_msg_handle(msg)
     elif get_message_type(msg) == 'group':
