@@ -17,7 +17,8 @@ template_data = {
 
 
 def create_user_data(group_id, user_id):
-    data = template_data
+    import copy
+    data = copy.deepcopy(template_data)
     data['group_id'] = group_id
     data['user_id'] = user_id
     return data
