@@ -140,6 +140,7 @@ def notice_handle(msg):
 
 
 def request_handle(msg):
+    logging_put('收到请求type'+get_request_type(msg))
     if get_request_type(msg) == 'group':
         if msg['sub_type'] == 'invite':
             admin = db.admin.find_one({'user_id':msg['user_id'],'admin':{'$gte':4}})
