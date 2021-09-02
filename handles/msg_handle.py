@@ -18,6 +18,10 @@ def get_number(msg):
         return msg['user_id']
 
 
+# 获取角色
+def get_role(msg): return msg['sender']['role']
+
+
 # 获取群号
 def get_group_id(msg): return msg['group_id']
 

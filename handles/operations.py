@@ -7,8 +7,9 @@ import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
+
 def get_admin(msg):
-    return db.admin.find_one({
+    admin = db.admin.find_one({
         '$or': [
             {
                 'user_id': str(get_user_id(msg)),
@@ -20,6 +21,22 @@ def get_admin(msg):
             }
         ]
     })
+    if not admin:
+        if get_role(msg) == 'admin':
+            # 是群管理，自动生成管理等级为2的权限字串
+            admin = {
+                'user_id': str(get_user_id(msg)),
+                'group_id': str(get_group_id(msg)),
+                'admin': 2
+            }
+        if get_role(msg) == 'owner':
+            # 是群主，自动生成管理等级为3的权限字串
+            admin = {
+                'user_id': str(get_user_id(msg)),
+                'group_id': str(get_group_id(msg)),
+                'admin': 3
+            }
+    return admin
 
 
 def logging_put(info):
@@ -30,19 +47,33 @@ def logging_put(info):
     )
     logging.info(info)
 
+
 def group_ban(group_id, user_id, duration=0):
     if user_id == 'all':
         if duration > 0:
-            payload = '/set_group_whole_ban?group_id='+str(group_id)+'&enable=true'
+            payload = '/set_group_whole_ban?group_id=' + \
+                str(group_id)+'&enable=true'
             logging_put('群['+str(group_id)+']禁言')
         else:
-            payload = '/set_group_whole_ban?group_id='+str(group_id)+'&enable=false'
+            payload = '/set_group_whole_ban?group_id=' + \
+                str(group_id)+'&enable=false'
             logging_put('群['+str(group_id)+']解禁')
     else:
-        payload = '/set_group_ban?group_id='+str(group_id)+'&user_id='+str(user_id)+'&duration='+str(duration)
-        logging_put('群['+str(group_id)+']禁言['+str(user_id)+']'+str(duration)+'秒')
+        payload = '/set_group_ban?group_id=' + \
+            str(group_id)+'&user_id='+str(user_id)+'&duration='+str(duration)
+        logging_put('群['+str(group_id)+']禁言[' +
+                    str(user_id)+']'+str(duration)+'秒')
     r = requests.get('http://127.0.0.1:5700' + payload)
     if r.status_code != 200:
         logging_put('禁言失败')
+        return False
+    return True
+
+
+def delete_msg(msg_id):
+    # 撤回消息
+    payload = '/delete_msg?message_id='+msg_id
+    r = requests.get('http://127.0.0.1:5700' + payload)
+    if r.status_code != 200:
         return False
     return True

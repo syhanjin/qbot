@@ -20,6 +20,7 @@ def create_msg_data(msg):
     data['group_id'] = get_group_id(msg)
     data['user_id'] = get_user_id(msg)
     data['time'] = datetime.datetime.now()
+    data['msg_id'] = msg['message_id']
     return data
 
 # ----- ----- ----- -----
@@ -46,15 +47,20 @@ def count_group_msg(msg):
     # 统计群消息
     group_id, user_id = get_group_id(msg), get_user_id(msg)
     data = create_msg_data(msg)
-    data_i4_count = db.msg.find({
+    data_i4 = db.msg.find({
         'group_id':group_id,
         'user_id':user_id,
         'time' :{'$gte': data['time'] - datetime.timedelta(seconds=4)}
-    }).count()
+    })
+    data_i4_count = data_i4.count()
     admin = get_admin(msg)
     if not admin and data_i4_count >= 3:
         # 4秒内发送消息4次则禁言 60s
         group_ban(group_id, user_id, 60)
+        # 执行消息撤回
+        for i in list(data_i4):
+            delete_msg(i['msg_id'])
+        delete_msg(msg['message_id'])
     # 关键词拦截 --等待网站控制台
     
     
@@ -93,7 +99,6 @@ def message_handle(msg):
 
 
 def notice_handle(msg):
-    logging_put("收到通知 来自"+str(get_group_id(msg)))
     if get_notice_type(msg) == 'group_increase':
         # 群成员增加
         send_msg({
@@ -105,7 +110,7 @@ def notice_handle(msg):
 
 
 def request_handle(msg):
-
+    logging_put("收到请求 来自"+str(get_group_id(msg)))
     return
 
 
