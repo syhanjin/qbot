@@ -47,7 +47,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
             'msg_type': 'group'
         })
         return
-    group_id = str(msg['group_id'])
+    group_id = msg['group_id']
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
         return False
@@ -57,16 +57,20 @@ def test_cards(msg, cmd=None, cmd_data=None):
     for i in datas:
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
-            user = db.user.find_one({'user_id':i['user_id'],'group_id':msg['group_id']})
-            operations.logging_put(str(user))
+            user = db.user.find_one({'user_id':i['user_id'],'group_id':group_id})
+            operations.logging_put(
+                'user_id=<'+type(i['user_id'])+'>'+str(i['user_id'])+'\n'
+                +'group_id=<'+type(group_id)+'>'+str(group_id)+'\n'
+                +'data='+str(user)
+            )
             if not user:
-                user = operations.create_user_data(msg['group_id'], i['user_id'])
+                user = operations.create_user_data(group_id, i['user_id'])
                 user['card_warn'] = 1
                 db.user.insert_one(user)
             else:
                 db.user.update_one({'_id':user['_id']},{'$inc':{'card_warn':1}})
             if user['card_warn'] >= reg['warn']:
-                operations.group_kick(msg['group_id'], i['user_id'])
+                operations.group_kick(group_id, i['user_id'])
                 flag = True
             else:
                 wids.append(i['user_id'])

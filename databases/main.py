@@ -23,13 +23,13 @@ db.drop_collection('card')
 db.create_collection('card')
 db.card.insert_many([
     {
-        'group_id': '457263503',
+        'group_id': 457263503,
         'reg': '新高一|[ck]\d{2,4}|高[二三四]|[墙社站]$|社长$',
         'warn': 3, # 警告次数
         'interval': 3600, # 单位 s
         # 'operation': 'kick', # 操作：踢出
     },{
-        'group_id': '1003132999',
+        'group_id': 1003132999,
         'reg': '新高一|[ck]\d{2,4}|高[二三四]|[墙社站]$|社长$',
         'warn': 3, # 警告次数
         'interval': 3600, # 单位 s
