@@ -65,7 +65,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
             if user == None:
                 user = operations.create_user_data(group_id, i['user_id'])
                 user['card_warn'] = 1
-                operations.logging_put(str(user))
+                # operations.logging_put(str(user))
                 db.user.insert_one(user)
             else:
                 db.user.update_one({'_id': user['_id']}, {
