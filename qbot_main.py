@@ -34,6 +34,7 @@ def update_user_data(data):
     for k, v in template_data:
         if k not in data:
             data[k] = v
+    return data
 
 
 def create_msg_data(msg):
@@ -110,6 +111,12 @@ def group_msg_handle(msg):
 
 def message_handle(msg):
     logging_put("收到消息'"+get_raw_message(msg)+"'来自"+str(get_number(msg)))
+    data = db.user.find_one({'user_id': msg['user_id']})
+    if not data:
+        db.user.insert_one(create_user_data(
+            msg['group_id'], msg['user_id']))
+    else:
+        db.user.update_one({'_id':data['_id']},{'$set':update_user_data(data)})
     if get_message_type(msg) == 'private':
         private_msg_handle(msg)
     elif get_message_type(msg) == 'group':
@@ -143,11 +150,12 @@ def request_handle(msg):
     logging_put('收到请求 '+str(msg))
     if get_request_type(msg) == 'group':
         if msg['sub_type'] == 'invite':
-            admin = db.admin.find_one({'user_id':str(msg['user_id']),'admin':{'$gte':4}})
+            admin = db.admin.find_one(
+                {'user_id': str(msg['user_id']), 'admin': {'$gte': 4}})
             if admin:
-                set_group_add_request(msg['flag'],msg['sub_type'])
+                set_group_add_request(msg['flag'], msg['sub_type'])
                 send_msg({
-                    'number':msg['group_id'],
+                    'number': msg['group_id'],
                     'msg_type': 'group',
                     'msg': '我是机器人 ' + NAME + '，正在开发...\n DEVELOPER：[CQ:at,qq=2819469337,name=寒金 | Sakuyark]'
                 })
@@ -173,7 +181,8 @@ def main():
         for i in cards:
             if not i.get('next') or now > i.get('next'):
                 command.test_cards(i['group_id'])
-                db.card.update_one({'_id':i['_id']},{'$set':{'next':now+datetime.timedelta(seconds=i['interval'])}})
+                db.card.update_one({'_id': i['_id']}, {
+                                   '$set': {'next': now+datetime.timedelta(seconds=i['interval'])}})
     if request.json:
         msg = request.json
         post_type = get_post_type(msg)  # 获取上报类型
