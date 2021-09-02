@@ -77,7 +77,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
                 wids.append(i['user_id'])
     msg = '【群名片警告】\n'
     for i in wids:
-        msg += '[CQ:at,qq='+i+']'
+        msg += '[CQ:at,qq='+str(i)+']'
     msg += '请修改群名片，名片格式参见公告，三次警告后踢出\n'
     if flag:
         msg += '警告满'+str(reg['warn'])+'次的已t出'
