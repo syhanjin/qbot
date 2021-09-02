@@ -143,7 +143,7 @@ def request_handle(msg):
     logging_put('收到请求 '+str(msg))
     if get_request_type(msg) == 'group':
         if msg['sub_type'] == 'invite':
-            admin = db.admin.find_one({'user_id':msg['user_id'],'admin':{'$gte':4}})
+            admin = db.admin.find_one({'user_id':str(msg['user_id']),'admin':{'$gte':4}})
             if admin:
                 set_group_add_request(msg['flag'],msg['sub_type'])
                 send_msg({
