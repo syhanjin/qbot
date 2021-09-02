@@ -77,3 +77,30 @@ def delete_msg(msg_id):
     if r.status_code != 200:
         return False
     return True
+
+
+def get_group_member_list(group_id):
+    # 获取群成员列表
+    payload = '/get_group_member_list?group_id='+str(group_id)
+    r = requests.get('http://127.0.0.1:5700' + payload)
+    if r.status_code != 200:
+        return False
+    return r.json
+
+
+def group_kick(group_id, user_id):
+    # 踢出群聊
+    payload = '/set_group_kick?group_id='+str(group_id)+'&user_id='+str(user_id)
+    r = requests.get('http://127.0.0.1:5700' + payload)
+    if r.status_code != 200:
+        return False
+    return True
+
+
+def set_group_add_request(flag,sub_type,approve='true'):
+    # 处理加群请求
+    payload = '/set_group_add_request?flag='+str(flag)+'&subtype='+str(sub_type)+'&approve='+str(approve)
+    r = requests.get('http://127.0.0.1:5700' + payload)
+    if r.status_code != 200:
+        return False
+    return True

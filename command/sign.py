@@ -45,11 +45,9 @@ def putText(draw, x, y, text: 'str | tuple', font='微软雅黑', fontsize=16, f
 
 def create_data(msg):
     data = {'qq': msg['user_id'], 'group': msg['group_id']}
-    data['favorability'] = 0    # 好感度
     data['favorLevel'] = 0      # 好感等级
     data['continuity'] = 0      # 连续签到
     data['last'] = None         # 上次签到时间
-    data['coin'] = 0            # 硬币
     return data
 
 
@@ -217,6 +215,10 @@ def main(msg, cmd, cmd_data):
         sydata = userdb.userdata.find_one({'qq': msg['user_id']})
         if sydata:
             data['user'] = sydata.get('user')
+    user = db.user.find_one(
+        {'group_id': msg['group_id'], 'user_id': msg['user_id']})
+    data['favorability'] = user['favorability']
+    data['coin'] = user['coin']
     # '''
     if data.get('last'):
         now = datetime.datetime.now()
@@ -250,6 +252,8 @@ def main(msg, cmd, cmd_data):
     else:
         db.sign.update_one(
             {'qq': msg['user_id'], 'group': msg['group_id']}, {'$set': data})
+    db.user.update_one({'user_id': msg['user_id']}, {
+                       '$set': {'coin': data['coin'], 'favorability': data['favorability']}})
     send_msg({
         'msg_type': 'group',
         'number': msg['group_id'],

@@ -44,3 +44,7 @@ def set_raw_message(msg, new_info): msg['raw_message'] = new_info
 
 # 得到通知类型
 def get_notice_type(msg): return msg['notice_type']
+
+
+# 得到请求类型
+def get_request_type(msg): return msg['request_type']

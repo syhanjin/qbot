@@ -1,5 +1,6 @@
 # coding=utf-8
 import datetime
+import re
 from flask import Flask, request
 # from handles import sever
 from handles.client import send_msg
@@ -9,10 +10,30 @@ import command
 import logging
 import pymongo
 
+NAME = '依栎'
+
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
 # ----- ----- ----- -----
+template_data = {
+    'favorability': 0,      # 好感度
+    'coin': 0,              # 硬币
+    'card_warn': 0          # 名片警告次数
+}
+
+
+def create_user_data(group_id, user_id):
+    data = template_data
+    data['group_id'] = group_id
+    data['user_id'] = user_id
+    return data
+
+
+def update_user_data(data):
+    for k, v in template_data:
+        if k not in data:
+            data[k] = v
 
 
 def create_msg_data(msg):
@@ -48,9 +69,9 @@ def count_group_msg(msg):
     group_id, user_id = get_group_id(msg), get_user_id(msg)
     data = create_msg_data(msg)
     data_i4 = db.msg.find({
-        'group_id':group_id,
-        'user_id':user_id,
-        'time' :{'$gte': data['time'] - datetime.timedelta(seconds=4)}
+        'group_id': group_id,
+        'user_id': user_id,
+        'time': {'$gte': data['time'] - datetime.timedelta(seconds=4)}
     })
     data_i4_count = data_i4.count()
     admin = get_admin(msg)
@@ -62,8 +83,6 @@ def count_group_msg(msg):
             delete_msg(i['msg_id'])
         delete_msg(msg['message_id'])
     # 关键词拦截 --等待网站控制台
-    
-    
 
     db.msg.insert_one(data)
     return
@@ -101,21 +120,72 @@ def message_handle(msg):
 def notice_handle(msg):
     if get_notice_type(msg) == 'group_increase':
         # 群成员增加
+        increase = db.increase.find_one({'group_id': str(msg['group_id'])})
+        if increase:
+            msg = increase.get('msg')
+        else:
+            msg = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
+        msg.replace('[AT]', '[CQ:at,qq='+str(msg['user_id'])+']')
+        msg.replace('[NAME]', msg['sender']['nickname'])
+        msg.replace('[QQ]', str(msg['user_id']))
         send_msg({
-            'msg': '欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告',
+            'msg': msg,
             'number': msg['group_id'],
             'msg_type': 'group'
         })
+        if not db.user.find_one({'user_id': msg['user_id']}):
+            db.user.insert_one(create_user_data(
+                msg['group_id'], msg['user_id']))
     return
 
 
 def request_handle(msg):
-    logging_put("收到请求 来自"+str(get_group_id(msg)))
+    if get_request_type(msg) == 'group':
+        if msg['sub_type'] == 'invite':
+            admin = db.admin.find_one({'user_id':msg['user_id'],'admin':{'$gte':4}})
+            if admin:
+                set_group_add_request(msg['flag'],msg['sub_type'])
+                send_msg({
+                    'number':msg['group_id'],
+                    'msg_type': 'group',
+                    'msg': '我是机器人 ' + NAME + '，正在开发...\n DEVELOPER：[CQ:at,qq=2819469337,name=寒金 | Sakuyark]'
+                })
+
     return
 
 
 def default():
 
+    return
+
+
+def test_cards(group_id):
+    reg = db.card.find_one({'group_id': group_id})
+    if not reg:
+        return False
+    datas = get_group_member_list(group_id)
+    wids = []
+    flag = False
+    for i in datas:
+        card = i['card'] if(i.get('card')) else i['nickname']
+        if not re.match(reg['reg'], card, re.I):
+            user = db.user.find_one_and_update({'user_id':i['user_id']},{'$inc':{'card_warn':1}})
+            if user['card_warn'] >= reg['warn']:
+                group_kick(group_id, i['user_id'])
+                flag = True
+            else:
+                wids.append(i['user_id'])
+    msg = '【群名片警告】\n'
+    for i in wids:
+        msg += '[CQ:at,qq='+i+']'
+    msg += '请修改群名片，名片格式参见公告，三次警告后踢出\n'
+    if flag: msg+='警告满'+str(reg['warn'])+'次的已t出'
+    if flag or len(wids) > 0:
+        send_msg({
+            'number': group_id,
+            'msg': msg,
+            'msg_type': 'group'
+        })
     return
 
 # ----- ----- ----- -----
@@ -126,6 +196,13 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    now = datetime.datetime.now()
+    if now.hour > 6 and now.hour < 22:
+        cards = list(db.card.find())
+        for i in cards:
+            if not i.get('next') or now > i.get('next'):
+                test_cards(i['group_id'])
+                db.card.update_one({'_id':i['_id']},{'$set':{'next':now+datetime.timedelta(seconds=i['interval'])}})
     if request.json:
         msg = request.json
         post_type = get_post_type(msg)  # 获取上报类型
