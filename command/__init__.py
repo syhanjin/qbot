@@ -45,7 +45,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
             'msg_type': 'group'
         })
         return
-    group_id = msg['group_id']
+    group_id = str(msg['group_id'])
     reg = db.card.find_one({'group_id': group_id})
     if not reg:
         return False
