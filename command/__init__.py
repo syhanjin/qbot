@@ -57,7 +57,8 @@ def test_cards(msg, cmd=None, cmd_data=None):
     flag = False
     for i in datas:
         card = i['card'] if(i.get('card')) else i['nickname']
-        if not re.match(reg['reg'], card, re.I):
+        admin = operations.get_admin(i)
+        if not admin and not re.match(reg['reg'], card, re.I):
             user = db.user.find_one(
                 {'user_id': i['user_id'], 'group_id': group_id})
             # operations.logging_put('user_id=<'+str(type(i['user_id']))+'>'+str(

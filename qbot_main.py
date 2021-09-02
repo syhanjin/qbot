@@ -101,7 +101,8 @@ def message_handle(msg):
 def notice_handle(msg):
     if get_notice_type(msg) == 'group_increase':
         # 群成员增加
-        increase = db.increase.find_one({'group_id': str(msg['group_id'])})
+        logging_put('群['+str(msg['group_id'])+']成员增加')
+        increase = db.increase.find_one({'group_id': msg['group_id']})
         if increase:
             msg = increase.get('msg')
         else:

@@ -6,8 +6,7 @@ db = client['qbot']
 db.drop_collection('increase')
 db.create_collection('increase')
 db.increase.insert_many([
-    {'group_id': '457263503', 'msg':
-     '''[AT] 欢迎新同学！
+    {'group_id': 457263503, 'msg':'''[AT] 欢迎新同学！
 改名片！改名片！重要的事情说两遍！
 不改的管理员会t人
 【机器人自动识别名片中】
@@ -28,11 +27,12 @@ db.card.insert_many([
         'warn': 3, # 警告次数
         'interval': 3600, # 单位 s
         # 'operation': 'kick', # 操作：踢出
-    },{
-        'group_id': 1003132999,
-        'reg': '新高一|[ck]\d{2,4}|高[二三四]|[墙社站]$|社长$',
-        'warn': 3, # 警告次数
-        'interval': 3600, # 单位 s
-        # 'operation': 'kick', # 操作：踢出
-    }
+    },
+    # {
+    #     'group_id': 1003132999,
+    #     'reg': '新高一|[ck]\d{2,4}|高[二三四]|[墙社站]$|社长$',
+    #     'warn': 3, # 警告次数
+    #     'interval': 3600, # 单位 s
+    #     # 'operation': 'kick', # 操作：踢出
+    # }
 ])
