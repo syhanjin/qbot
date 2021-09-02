@@ -59,7 +59,7 @@ def get_admin(msg):
             }
         ]
     })
-    logging_put(str(admin))
+    logging_put(str(not admin))
     if not admin:
         if get_role(msg) == 'admin':
             # 是群管理，自动生成管理等级为2的权限字串
