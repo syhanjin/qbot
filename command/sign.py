@@ -1,4 +1,5 @@
 # coding=utf-8
+from handles.operations import get_admin
 from handles.client import send_msg
 # from handles.client import send_msg
 import pymongo
@@ -72,6 +73,9 @@ def generate_card(msg, data):
     data['coin'] += coin
     if data['favorability'] > fav['max']:
         data['favorLevel'] += 1
+    admin = get_admin(msg)
+    if admin and admin['admin'] == 5:
+        fav['label'] = '主仆'
 
     # 生成图片
     # region 随机背景

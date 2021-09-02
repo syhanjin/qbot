@@ -1,10 +1,27 @@
 # coding=utf-8
+from handles.msg_handle import *
 import requests
 import logging
 import pymongo
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
+
+def get_admin(msg):
+    return db.admin.find_one({
+        '$or': [
+            {
+                'user_id': str(get_user_id(msg)),
+                'group_id': str(get_group_id(msg))
+            },
+            {
+                'user_id': str(get_user_id(msg)),
+                'admin': {'$gte': 4}
+            }
+        ]
+    })
+
+
 def logging_put(info):
     logging.basicConfig(
         filename='robot.log',
@@ -29,6 +46,3 @@ def group_ban(group_id, user_id, duration=0):
         logging_put('禁言失败')
         return False
     return True
-
-def is_admin(qq):
-    return bool(db.admin.find_one({'user_id':str(qq)}))

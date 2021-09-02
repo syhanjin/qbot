@@ -1,4 +1,5 @@
 # coding=utf-8
+import datetime
 from flask import Flask, request
 # from handles import sever
 from handles.client import send_msg
@@ -11,10 +12,19 @@ import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
+# ----- ----- ----- -----
 
 
+def create_user_data(msg):
+    data = {'group_id': get_group_id(msg), 'user_id': get_user_id(msg)}
+    data['count'] = 0
+    data['last'] = None
+
+    return data
 
 # ----- ----- ----- -----
+
+
 def private_msg_handle(msg):
     content = get_raw_message(msg)
     # 指令检测
@@ -32,10 +42,32 @@ def private_msg_handle(msg):
     return
 
 
+def count_group_msg(msg):
+    # 统计群消息
+    group_id, user_id = get_group_id(msg), get_user_id(msg)
+    data = db.msg.find_one(
+        {'group': group_id, 'user_id': user_id})
+    admin = get_admin(msg)
+    if not data:
+        # 新发消息
+        data = create_user_data(msg)
+        db.msg.insert_one(data)
+    now = datetime.datetime.now()
+    if not admin and data['last'] and (now - data['last']).seconds < 2:
+        # 非管理员用户两秒内连续发送消息，将被禁言 60s
+        group_ban(group_id, user_id)
+    data['count'] += 1
+    data['last'] = now
+    db.msg.update_one({'_id': data['_id']}, {'$set': data})
+    return
+
+
 def group_msg_handle(msg):
     content = get_raw_message(msg)
+    count_group_msg(msg)
     # 指令检测
-    cmd_data = db.cmd.find_one({'$where': '"'+content+'".match(this.key)', 'group': True})
+    cmd_data = db.cmd.find_one(
+        {'$where': '"'+content+'".match(this.key)', 'group': True})
     if cmd_data != None:
         logging_put('收到指令['+str(msg['group_id'])+']:'+content)
         if cmd_data.get('inline'):

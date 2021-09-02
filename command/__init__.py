@@ -6,7 +6,7 @@ from handles import operations
 import re
 
 def group_ban(msg, cmd, cmd_data):
-    if not operations.is_admin(msg['user_id']):
+    if not operations.get_admin(msg):
         send_msg({
             'msg': '你不是管理员，无权进行操作',
             'number': msg['group_id'],
@@ -21,7 +21,7 @@ def group_ban(msg, cmd, cmd_data):
     operations.group_ban(msg['group_id'], qq, duration)
 
 def cancel_group_ban(msg, cmd, cmd_data):
-    if not operations.is_admin(msg['user_id']):
+    if not operations.get_admin(msg):
         send_msg({
             'msg': '你不是管理员，无权进行操作',
             'number': msg['group_id'],
