@@ -1,3 +1,4 @@
+import datetime
 import pymongo
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
@@ -26,6 +27,7 @@ db.card.insert_many([
         'reg': '新?高一|[ck]\d{2,4}|高[二三四]|[墙社站]$|社长$',
         'warn': 3, # 警告次数
         'interval': 86400, # 单位 s
+        'next': datetime.datetime.now() +datetime.timedelta(days=1)
         # 'operation': 'kick', # 操作：踢出
     },
     # {
