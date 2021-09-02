@@ -54,6 +54,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
     wids = []
     flag = False
     for i in datas:
+        operations.logging_put(i)
         i = json.loads(i)
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
