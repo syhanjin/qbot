@@ -15,7 +15,7 @@ db.increase.insert_many([
 老学员请在名片中包含 c/k开头的班级 [忽略大小写]
 包含以下字段的也可
 高二，高三，高四，墙$(表示这个字在最后)，社$，社长$, 站$
-只要满足正则表达式 /[ck]\d{2,4}|高[一二三四]|[墙社站]$|社长$|Q群管家/i 即可
+只要满足正则表达式 /[ck]\d{2,4}|高 *[一二三四]|[墙社站]$|社长$|^Q群管家$/i 即可
 '''}
 ])
 
@@ -24,7 +24,7 @@ db.create_collection('card')
 db.card.insert_many([
     {
         'group_id': 457263503,
-        'reg': '[ck]\d{2,4}|高[一二三四]|[墙社站]$|社长$|Q群管家',
+        'reg': '[ck]\d{2,4}|高 *[一二三四]|[墙社站]$|社长$|^Q群管家$',
         'warn': 3, # 警告次数
         'interval': 86400, # 单位 s
         'next': datetime.datetime.now() +datetime.timedelta(days=1)
