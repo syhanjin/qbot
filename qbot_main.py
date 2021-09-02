@@ -16,34 +16,6 @@ client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
 # ----- ----- ----- -----
-template_data = {
-    'favorability': 0,      # 好感度
-    'coin': 0,              # 硬币
-    'card_warn': 0          # 名片警告次数
-}
-
-
-def create_user_data(group_id, user_id):
-    data = template_data
-    data['group_id'] = group_id
-    data['user_id'] = user_id
-    return data
-
-
-def update_user_data(data):
-    for k, v in template_data.items():
-        if k not in data:
-            data[k] = v
-    return data
-
-
-def create_msg_data(msg):
-    data = {}
-    data['group_id'] = get_group_id(msg)
-    data['user_id'] = get_user_id(msg)
-    data['time'] = datetime.datetime.now()
-    data['msg_id'] = msg['message_id']
-    return data
 
 # ----- ----- ----- -----
 

@@ -8,6 +8,36 @@ client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
 
+template_data = {
+    'favorability': 0,      # 好感度
+    'coin': 0,              # 硬币
+    'card_warn': 0          # 名片警告次数
+}
+
+
+def create_user_data(group_id, user_id):
+    data = template_data
+    data['group_id'] = group_id
+    data['user_id'] = user_id
+    return data
+
+
+def update_user_data(data):
+    for k, v in template_data.items():
+        if k not in data:
+            data[k] = v
+    return data
+
+
+def create_msg_data(msg):
+    data = {}
+    data['group_id'] = get_group_id(msg)
+    data['user_id'] = get_user_id(msg)
+    data['time'] = datetime.datetime.now()
+    data['msg_id'] = msg['message_id']
+    return data
+
+
 def get_admin(msg):
     admin = db.admin.find_one({
         '$or': [
@@ -90,16 +120,18 @@ def get_group_member_list(group_id):
 
 def group_kick(group_id, user_id):
     # 踢出群聊
-    payload = '/set_group_kick?group_id='+str(group_id)+'&user_id='+str(user_id)
+    payload = '/set_group_kick?group_id=' + \
+        str(group_id)+'&user_id='+str(user_id)
     r = requests.get('http://127.0.0.1:5700' + payload)
     if r.status_code != 200:
         return False
     return True
 
 
-def set_group_add_request(flag,sub_type,approve='true'):
+def set_group_add_request(flag, sub_type, approve='true'):
     # 处理加群请求
-    payload = '/set_group_add_request?flag='+str(flag)+'&subtype='+str(sub_type)+'&approve='+str(approve)
+    payload = '/set_group_add_request?flag=' + \
+        str(flag)+'&subtype='+str(sub_type)+'&approve='+str(approve)
     r = requests.get('http://127.0.0.1:5700' + payload)
     if r.status_code != 200:
         return False

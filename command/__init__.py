@@ -57,7 +57,13 @@ def test_cards(msg, cmd=None, cmd_data=None):
     for i in datas:
         card = i['card'] if(i.get('card')) else i['nickname']
         if not re.match(reg['reg'], card, re.I):
-            user = db.user.find_one_and_update({'user_id':i['user_id']},{'$inc':{'card_warn':1}})
+            user = db.user.find_one({'user_id':i['user_id']})
+            if not user:
+                user = operations.create_user_data(group_id, i['user_id'])
+                user['card_warn'] = 1
+                db.user.insert_one(user)
+            else:
+                db.user.update_one({'_id':user['_id']},{'$inc':{'card_warn':1}})
             if user['card_warn'] >= reg['warn']:
                 operations.group_kick(group_id, i['user_id'])
                 flag = True
