@@ -182,7 +182,12 @@ def main():
         cards = list(db.card.find())
         for i in cards:
             if not i.get('next') or now > i.get('next'):
-                command.test_cards(i['group_id'])
+                command.test_cards(
+                    {
+                        'group_id':i['group_id'],
+                        'user_id': '2819469337'
+                    }
+                )
                 db.card.update_one({'_id': i['_id']}, {
                                    '$set': {'next': now+datetime.timedelta(seconds=i['interval'])}})
     if request.json:

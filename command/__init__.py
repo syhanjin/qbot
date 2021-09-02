@@ -37,7 +37,7 @@ def cancel_group_ban(msg, cmd, cmd_data):
 
 
     
-def test_cards(msg, cmd, cmd_data):
+def test_cards(msg, cmd=None, cmd_data=None):
     if not operations.get_admin(msg):
         send_msg({
             'msg': '你不是管理员，无权进行操作',
