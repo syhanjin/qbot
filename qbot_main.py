@@ -108,7 +108,6 @@ def notice_handle(msg):
         else:
             msgstr = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
         msgstr.replace('[AT]', '[CQ:at,qq='+str(msg['user_id'])+']')
-        msgstr.replace('[NAME]', msg['sender']['nickname'])
         msgstr.replace('[QQ]', str(msg['user_id']))
         send_msg({
             'msg': msgstr,
