@@ -114,7 +114,7 @@ def notice_handle(msg):
             'number': msg['group_id'],
             'msg_type': 'group'
         })
-        if not db.user.find_one({'user_id': msg['user_id']}):
+        if not db.user.find_one({'user_id': msg['user_id'], 'group_id': msg['group_id']}):
             db.user.insert_one(create_user_data(
                 msg['group_id'], msg['user_id']))
     return
