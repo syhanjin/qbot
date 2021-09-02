@@ -53,6 +53,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
     datas = operations.get_group_member_list(group_id)
     wids = []
     flag = False
+    operations.logging_put(datas)
     for i in datas:
         operations.logging_put(i)
         i = json.loads(i)
