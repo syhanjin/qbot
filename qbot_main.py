@@ -104,14 +104,14 @@ def notice_handle(msg):
         logging_put('群['+str(msg['group_id'])+']成员增加')
         increase = db.increase.find_one({'group_id': msg['group_id']})
         if increase:
-            msg = increase.get('msg')
+            msgstr = increase.get('msg')
         else:
-            msg = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
-        msg.replace('[AT]', '[CQ:at,qq='+str(msg['user_id'])+']')
-        msg.replace('[NAME]', msg['sender']['nickname'])
-        msg.replace('[QQ]', str(msg['user_id']))
+            msgstr = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
+        msgstr.replace('[AT]', '[CQ:at,qq='+str(msg['user_id'])+']')
+        msgstr.replace('[NAME]', msg['sender']['nickname'])
+        msgstr.replace('[QQ]', str(msg['user_id']))
         send_msg({
-            'msg': msg,
+            'msg': msgstr,
             'number': msg['group_id'],
             'msg_type': 'group'
         })
