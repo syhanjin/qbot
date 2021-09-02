@@ -57,6 +57,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
     flag = False
     for i in datas:
         card = i['card'] if(i.get('card')) else i['nickname']
+        card = card.strip()
         admin = operations.get_admin(i)
         if not admin and not re.match(reg['reg'], card, re.I):
             user = db.user.find_one(
@@ -79,7 +80,7 @@ def test_cards(msg, cmd=None, cmd_data=None):
     msg = '【群名片警告】\n'
     for i in wids:
         msg += '[CQ:at,qq='+str(i)+']'
-    msg += '请修改群名片，名片格式参见公告，三次警告后踢出\n'
+    msg += '\n请修改群名片，名片格式参见公告，三次警告后踢出\n'
     if flag:
         msg += '警告满'+str(reg['warn'])+'次的已t出'
     if flag or len(wids) > 0:

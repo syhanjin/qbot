@@ -103,10 +103,9 @@ def notice_handle(msg):
         # 群成员增加
         logging_put('群['+str(msg['group_id'])+']成员增加')
         increase = db.increase.find_one({'group_id': msg['group_id']})
+        msgstr = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
         if increase:
             msgstr = increase.get('msg')
-        else:
-            msgstr = '[AT] 欢迎新人入群[CQ:face,id=99][CQ:face,id=99][CQ:face,id=99]~~~\n有问题请先看群公告'
         msgstr = msgstr.replace('[AT]', '[CQ:at,qq='+str(msg['user_id'])+']')
         msgstr = msgstr.replace('[QQ]', str(msg['user_id']))
         send_msg({
